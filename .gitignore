@@ -4,4 +4,4 @@ __pycache__/
 .env
 .vscode/
 .idea/
-data.json
+# Bỏ data.json ra khỏi đây để GitHub có thể lưu dữ liệu thủy triều
