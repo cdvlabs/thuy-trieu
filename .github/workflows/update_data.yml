@@ -2,22 +2,23 @@ name: Update Tide Data Automatically
 
 on:
   schedule:
-    - cron: '30 2 * * *'  # 9:30 AM VN hàng ngày
+    - cron: '30 2 * * *'  # Lần 1: 02:30 UTC = 09:30 AM VN
+    - cron: '30 9 * * *'  # Lần 2: 09:30 UTC = 16:30 PM VN
   push:
     paths:
       - 'HCMC_TVHN_*.pdf'
       - 'parse_pdf.py'
-  workflow_dispatch:      # Nút bấm chạy thủ công
+  workflow_dispatch:      # Cho phép bấm nút chạy thủ công
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4 # Nâng cấp từ v3 lên v4
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v5 # Nâng cấp từ v4 lên v5
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 

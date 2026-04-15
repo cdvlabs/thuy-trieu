@@ -28,9 +28,14 @@ def parse_tide_pdf(pdf_path):
                 elif "Nhà Bè" in line: current_station = "Nhà Bè"
                 elif "Thủ Dầu Một" in line: current_station = "Thủ Dầu Một"
                 
-                match = re.search(r'^(\d{2}/\d{2})\s+(.*)', line)
+                # Chấp nhận dd/mm hoặc d/m hoặc d/mm hoặc dd/m
+                match = re.search(r'^(\d{1,2}/\d{1,2})\s+(.*)', line)
                 if match and current_station:
-                    day = match.group(1)
+                    raw_day = match.group(1)
+                    # Chuẩn hóa về dd/mm (ví dụ 9/4 -> 09/04)
+                    day_parts = raw_day.split('/')
+                    day = f"{int(day_parts[0]):02d}/{int(day_parts[1]):02d}"
+                    
                     parts = re.findall(r'(-?\d+\.\d+)', match.group(2))
                     if len(parts) >= 4:
                         if current_station not in data: data[current_station] = {}
