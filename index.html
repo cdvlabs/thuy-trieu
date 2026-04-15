@@ -3,123 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thủy Triều TP.HCM - Dự Báo 2026</title>
+    <title>Thủy Triều TP.HCM - Giám sát 3 Ngày</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        
         :root {
-            --bg-body: #0f172a;
-            --bg-glass: rgba(30, 41, 59, 0.7);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: rgba(255, 255, 255, 0.1);
-            --shadow: rgba(0, 0, 0, 0.3);
-            --accent: #3b82f6;
+            --bg-body: #0f172a; --bg-glass: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc; --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1); --shadow: rgba(0, 0, 0, 0.3);
         }
-
         .light-mode {
-            --bg-body: #f8fafc;
-            --bg-glass: rgba(255, 255, 255, 0.85);
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: rgba(0, 0, 0, 0.08);
-            --shadow: rgba(0, 0, 0, 0.05);
-            --accent: #2563eb;
+            --bg-body: #f8fafc; --bg-glass: rgba(255, 255, 255, 0.85);
+            --text-main: #1e293b; --text-muted: #64748b;
+            --border: rgba(0, 0, 0, 0.08); --shadow: rgba(0, 0, 0, 0.05);
         }
-
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-body); 
-            color: var(--text-main); 
-            transition: all 0.4s ease;
-            overflow-x: hidden;
-        }
-        
-        .glass { 
-            background: var(--bg-glass); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 40px var(--shadow);
-        }
-
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-body); color: var(--text-main); transition: all 0.4s ease; overflow-x: hidden; }
+        .glass { background: var(--bg-glass); backdrop-filter: blur(20px); border: 1px solid var(--border); box-shadow: 0 10px 40px var(--shadow); }
         .card-tide { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .card-tide:hover { transform: translateY(-8px); filter: brightness(1.1); }
-
-        /* Custom Date Picker */
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(0.5);
-            cursor: pointer;
-        }
-        .light-mode input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(0);
-        }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.5); cursor: pointer; }
+        .light-mode input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0); }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-8 light-mode">
     <div class="max-w-6xl mx-auto">
-        <!-- Header -->
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
             <div class="flex-1">
-                <h1 class="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 bg-clip-text text-transparent tracking-tight text-center md:text-left">Thủy Triều TP.HCM</h1>
-                <p id="updateTime" class="text-xs font-bold mt-2 text-blue-500 uppercase tracking-[0.2em] flex items-center justify-center md:justify-start gap-2">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Dự báo thời gian thực 2026
+                <h1 class="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 bg-clip-text text-transparent tracking-tight">Thủy Triều TP.HCM</h1>
+                <p id="updateTime" class="text-xs font-bold mt-2 text-blue-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Dự báo 3 ngày liên tiếp
                 </p>
             </div>
-            
-            <div class="flex items-center gap-3 w-full md:w-auto justify-center">
-                <!-- Theme Toggle -->
-                <button id="themeToggle" class="glass p-3.5 rounded-2xl hover:bg-blue-500/10 transition-all shadow-lg">
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <button id="themeToggle" class="glass p-3.5 rounded-2xl shadow-lg">
                     <svg id="sunIcon" class="w-6 h-6 hidden text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
                     <svg id="moonIcon" class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 </button>
-                
-                <select id="stationSelect" class="glass px-5 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-sm shadow-lg">
+                <select id="stationSelect" class="glass px-5 py-3.5 rounded-2xl outline-none font-bold text-sm shadow-lg">
                     <option value="Nhà Bè" selected>Trạm Nhà Bè</option>
                     <option value="Phú An">Trạm Phú An</option>
                     <option value="Thủ Dầu Một">Trạm Thủ Dầu Một</option>
                 </select>
-                
-                <!-- Calendar Style Date Picker -->
-                <input type="date" id="datePicker" class="glass px-5 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-sm min-w-[160px] shadow-lg">
+                <input type="date" id="datePicker" class="glass px-5 py-3.5 rounded-2xl outline-none font-bold text-sm min-w-[160px] shadow-lg">
             </div>
         </header>
 
-        <!-- Stats Overview -->
+        <!-- Stats Overview (For Selected Date) -->
         <div id="statsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"></div>
 
-        <!-- Main Chart -->
+        <!-- Main Chart (3 Consecutive Days) -->
         <div class="glass p-6 md:p-10 rounded-[3rem] mb-10 shadow-2xl">
             <h3 class="text-xl font-black mb-10 flex items-center gap-4">
                 <span class="w-3 h-10 bg-blue-500 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.5)]"></span> 
-                Đồ thị Thủy triều & Mức báo động
+                Xu hướng mực nước 3 ngày liên tiếp (m)
             </h3>
             <div class="h-[350px] md:h-[450px]">
                 <canvas id="tideChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Table View -->
-        <div class="glass p-6 md:p-10 rounded-[3rem] mb-12 overflow-hidden shadow-2xl">
-            <h3 class="text-xl font-black mb-8 flex items-center gap-4">
-                <span class="w-3 h-10 bg-cyan-400 rounded-full shadow-[0_0_20px_rgba(34,211,238,0.4)]"></span> 
-                Bảng dự báo chi tiết các ngày tới
-            </h3>
-            <div class="overflow-x-auto rounded-2xl">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="text-slate-500 text-[0.65rem] font-black uppercase tracking-[0.25em] border-b border-white/5 bg-white/5">
-                            <th class="p-6">Ngày</th>
-                            <th class="p-6">Đỉnh Triều 1</th>
-                            <th class="p-6">Đỉnh Triều 2</th>
-                            <th class="p-6">Chân Triều 1</th>
-                            <th class="p-6">Chân Triều 2</th>
-                        </tr>
-                    </thead>
-                    <tbody id="forecastTableBody" class="text-sm font-bold"></tbody>
-                </table>
             </div>
         </div>
 
@@ -127,191 +68,150 @@
         <div id="alertBox" class="hidden glass border-l-8 border-red-500 p-8 rounded-[2.5rem] flex items-start gap-8 mb-12 bg-red-500/5 shadow-2xl">
             <div class="text-red-500 text-6xl animate-bounce">⚠️</div>
             <div>
-                <h4 class="font-black text-2xl text-red-500 uppercase tracking-tight">Cảnh báo Triều Cường</h4>
-                <p id="alertMsg" class="text-lg mt-3 font-semibold leading-relaxed text-slate-300"></p>
+                <h4 class="font-black text-2xl text-red-500 uppercase">Cảnh báo Triều Cường</h4>
+                <p id="alertMsg" class="text-lg mt-3 font-semibold text-slate-400"></p>
             </div>
         </div>
 
         <footer class="text-center text-slate-500 text-xs py-16 opacity-60 border-t border-white/5">
-            Dữ liệu Đài Khí tượng Thủy văn Nam Bộ &bull; Dự án Thủy triều HCM 2026 &bull; GitHub Pages Automation
+            Dữ liệu Đài Khí tượng Thủy văn Nam Bộ &bull; Dự báo liên tục 72 giờ
         </footer>
     </div>
 
     <script>
-        // Dữ liệu nhúng trực tiếp từ file JSON mới nhất của bạn (Ghi đè hoàn toàn dữ liệu cũ)
-        let rawData = {
-            "Phú An": {"12/04": {"h": [0.88, 0.52, 0.39, -1.5], "t": ["13:00", "21:30", "18:30", "05:00"]}, "13/04": {"h": [1.04, 0.31, -0.28, -1.6], "t": ["14:00", "23:30", "21:00", "06:00"]}, "14/04": {"h": [1.12, 0.29, -0.56, -1.67], "t": ["14:00", "00:30", "20:30", "07:30"]}, "15/04": {"h": [1.23, 0.65, -0.84, -1.69], "t": ["15:00", "01:30", "21:00", "08:00"]}, "16/04": {"h": [1.32, 1.01, -1.04, -1.32], "t": ["18:00", "03:00", "23:00", "10:00"]}, "17/04": {"h": [1.37, 1.17, -1.27, -1.20], "t": ["18:00", "04:00", "23:00", "11:00"]}, "18/04": {"h": [1.41, 1.34, -1.5, -0.97], "t": ["19:00", "05:00", "23:30", "12:00"]}},
-            "Nhà Bè": {"12/04": {"h": [1.06, 0.48, -1.21], "t": ["15:30", "19:00", "07:00"]}, "13/04": {"h": [1.16, 0.34, 0.13, -1.26], "t": ["16:00", "00:35", "23:00", "07:30"]}, "14/04": {"h": [1.19, 0.57, -0.12, -1.19], "t": ["16:30", "02:20", "23:30", "09:00"]}, "15/04": {"h": [1.25, 0.81, -0.31, -1.14], "t": ["17:00", "03:00", "23:30", "10:00"]}, "16/04": {"h": [1.33, 1.03, -1.11, -1.63], "t": ["17:00", "01:30", "22:30", "09:00"]}, "17/04": {"h": [1.39, 1.21, -1.41, -1.49], "t": ["17:00", "03:30", "22:00", "10:00"]}, "18/04": {"h": [1.43, 1.38, -1.66, -1.26], "t": ["18:00", "04:30", "22:30", "10:30"]}},
-            "Thủ Dầu Một": {"13/04": {"h": [1.16, 0.34, 0.13], "t": ["16:00", "0.35", "23:00"]}, "14/04": {"h": [1.19, 0.57], "t": ["16:30", "2.20"]}, "15/04": {"h": [1.3, 0.93, -0.1, -1.05], "t": ["18:30", "01:00", "20:30", "09:00"]}, "16/04": {"h": [1.34, 1.08, -1.08], "t": ["17:30", "03:30", "10:30"]}, "17/04": {"h": [1.38, 1.26, -0.57, -0.85], "t": ["18:00", "04:00", "00:00", "12:00"]}, "18/04": {"h": [1.45, 1.39, -0.71, -0.63], "t": ["18:30", "05:30", "00:30", "13:00"]}}
-        };
-
+        let rawData = {"Phú An": {"12/04": {"h": [0.88, 0.52, 0.39, -1.5], "t": ["13:00", "21:30", "18:30", "05:00"]}, "13/04": {"h": [1.04, 0.31, -0.28, -1.6], "t": ["14:00", "23:30", "21:00", "06:00"]}, "14/04": {"h": [1.12, 0.29, -0.56, -1.67], "t": ["14:00", "00:30", "20:30", "07:30"]}, "15/04": {"h": [1.23, 0.65, -0.84, -1.69], "t": ["15:00", "01:30", "21:00", "08:00"]}, "16/04": {"h": [1.32, 1.01, -1.04, -1.32], "t": ["18:00", "03:00", "23:00", "10:00"]}, "17/04": {"h": [1.37, 1.17, -1.27, -1.2], "t": ["18:00", "04:00", "23:00", "11:00"]}, "18/04": {"h": [1.41, 1.34, -1.5, -0.97], "t": ["19:00", "05:00", "23:30", "12:00"]}}, "Nhà Bè": {"12/04": {"h": [1.06, 0.48, -1.21], "t": ["15:30", "19:00", "07:00"]}, "13/04": {"h": [1.16, 0.34, 0.13, -1.26], "t": ["16:00", "00:35", "23:00", "07:30"]}, "14/04": {"h": [1.19, 0.57, -0.12, -1.19], "t": ["16:30", "02:20", "23:30", "09:00"]}, "15/04": {"h": [1.25, 0.81, -0.31, -1.14], "t": ["17:00", "03:00", "23:30", "10:00"]}, "16/04": {"h": [1.33, 1.03, -1.11, -1.63], "t": ["17:00", "01:30", "22:30", "09:00"]}, "17/04": {"h": [1.39, 1.21, -1.41, -1.49], "t": ["17:00", "03:30", "22:00", "10:00"]}, "18/04": {"h": [1.43, 1.38, -1.66, -1.26], "t": ["18:00", "04:30", "22:30", "10:30"]}}, "Thủ Dầu Một": {"13/04": {"h": [1.16, 0.34, 0.13], "t": ["16:00", "00:35", "23:00"]}, "14/04": {"h": [1.19, 0.57], "t": ["16:30", "02:20"]}, "15/04": {"h": [1.3, 0.93, -0.1, -1.05], "t": ["18:30", "01:00", "20:30", "09:00"]}, "16/04": {"h": [1.34, 1.08, -1.08], "t": ["17:30", "03:30", "10:30"]}, "17/04": {"h": [1.38, 1.26, -0.57, -0.85], "t": ["18:00", "04:00", "00:00", "12:00"]}, "18/04": {"h": [1.45, 1.39, -0.71, -0.63], "t": ["18:30", "05:30", "00:30", "13:00"]}}};
         let myChart;
         const stationEl = document.getElementById('stationSelect');
         const datePicker = document.getElementById('datePicker');
         const themeBtn = document.getElementById('themeToggle');
 
-        // Theme Toggle Logic
-        if (localStorage.theme === 'light') {
-            document.body.classList.add('light-mode');
-            document.getElementById('sunIcon').classList.remove('hidden');
-            document.getElementById('moonIcon').classList.add('hidden');
-        }
+        // Theme Logic
+        if (localStorage.theme === 'dark') { document.body.classList.remove('light-mode'); document.getElementById('sunIcon').classList.add('hidden'); document.getElementById('moonIcon').classList.remove('hidden'); }
+        themeBtn.onclick = () => { const isL = document.body.classList.toggle('light-mode'); localStorage.theme = isL ? 'light' : 'dark'; document.getElementById('sunIcon').classList.toggle('hidden'); document.getElementById('moonIcon').classList.toggle('hidden'); updateUI(); };
 
-        themeBtn.onclick = () => {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            localStorage.theme = isLight ? 'light' : 'dark';
-            document.getElementById('sunIcon').classList.toggle('hidden');
-            document.getElementById('moonIcon').classList.toggle('hidden');
-            updateUI();
-        };
-
-        // Get Color for Peak Tide
         function getTideColor(h) {
-            if (h < 0) return 'text-slate-400 opacity-60'; // Chân triều
-            if (h < 1.40) return 'text-blue-500'; // Bình thường
-            if (h < 1.50) return 'text-amber-500'; // Báo động I
-            if (h < 1.60) return 'text-orange-500'; // Báo động II
-            return 'text-red-500'; // Báo động III
+            if (h < 0) return '#94a3b8';
+            if (h < 1.40) return '#3b82f6';
+            if (h < 1.50) return '#fbbf24';
+            if (h < 1.60) return '#f97316';
+            return '#ef4444';
         }
 
         async function init() {
-            renderAll(); // Chạy ngay dữ liệu nhúng
             try {
                 const response = await fetch('data.json?v=' + Date.now());
-                if (response.ok) {
-                    rawData = await response.json();
-                    renderAll();
-                }
-            } catch (e) { console.log("Fetch failed, using embedded data."); }
-        }
-
-        function renderAll() {
+                if (response.ok) rawData = await response.json();
+            } catch (e) {}
+            
             const station = stationEl.value;
-            if (!rawData[station]) return;
-
             const dates = Object.keys(rawData[station]).sort((a,b) => {
-                const partsA = a.split('/');
-                const partsB = b.split('/');
+                const partsA = a.split('/'), partsB = b.split('/');
                 return new Date(2026, partsA[1]-1, partsA[0]) - new Date(2026, partsB[1]-1, partsB[0]);
             });
-            
+
             if (dates.length > 0) {
-                const format = (d) => `2026-${d.split('/')[1]}-${d.split('/')[0]}`;
-                datePicker.min = format(dates[0]);
-                datePicker.max = format(dates[dates.length-1]);
-                datePicker.value = format(dates[dates.length-1]);
-                document.getElementById('updateTime').innerText = `Dữ liệu mới nhất: Ngày ${dates[dates.length-1]}/2026`;
+                // Set default to TODAY if exists, else LATEST
+                const today = new Date();
+                const todayStr = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth()+1).padStart(2, '0')}`;
+                const defaultDate = dates.includes(todayStr) ? todayStr : dates[dates.length-1];
+                
+                datePicker.min = `2026-${dates[0].split('/')[1]}-${dates[0].split('/')[0]}`;
+                datePicker.max = `2026-${dates[dates.length-1].split('/')[1]}-${dates[dates.length-1].split('/')[0]}`;
+                datePicker.value = `2026-${defaultDate.split('/')[1]}-${defaultDate.split('/')[0]}`;
             }
-
-            updateTable(dates);
             updateUI();
-        }
-
-        function updateTable(dates) {
-            const station = stationEl.value;
-            const tbody = document.getElementById('forecastTableBody');
-            
-            tbody.innerHTML = dates.map(d => {
-                const dta = rawData[station][d];
-                const peaks = dta.h.map((h, i) => ({h, t: dta.t[i]})).filter(x => x.h >= 0).sort((a,b) => b.h - a.h);
-                const lows = dta.h.map((h, i) => ({h, t: dta.t[i]})).filter(x => x.h < 0).sort((a,b) => a.h - b.h);
-
-                return `
-                    <tr class="border-b border-white/5 hover:bg-blue-500/10 transition-all cursor-default">
-                        <td class="p-6 text-blue-500 font-black">Ngày ${d}</td>
-                        <td class="${getTideColor(peaks[0]?.h)} p-6">${peaks[0]?.h ? peaks[0].h.toFixed(2) + 'm (' + peaks[0].t + ')' : '--'}</td>
-                        <td class="${getTideColor(peaks[1]?.h)} p-6">${peaks[1]?.h ? peaks[1].h.toFixed(2) + 'm (' + peaks[1].t + ')' : '--'}</td>
-                        <td class="text-slate-400 p-6 opacity-60">${lows[0]?.h ? lows[0].h.toFixed(2) + 'm (' + lows[0].t + ')' : '--'}</td>
-                        <td class="text-slate-400 p-6 opacity-60">${lows[1]?.h ? lows[1].h.toFixed(2) + 'm (' + lows[1].t + ')' : '--'}</td>
-                    </tr>
-                `;
-            }).join('');
         }
 
         function updateUI() {
             const station = stationEl.value;
-            const parts = datePicker.value.split('-');
-            const date = `${parts[2]}/${parts[1]}`;
+            const selectedDateParts = datePicker.value.split('-');
+            const selectedDate = `${selectedDateParts[2]}/${selectedDateParts[1]}`;
             
-            if (!rawData[station] || !rawData[station][date]) return;
+            if (!rawData[station] || !rawData[station][selectedDate]) return;
 
-            const data = rawData[station][date];
+            // 1. Update Cards (Selected Day Only)
+            const dayData = rawData[station][selectedDate];
             const stats = document.getElementById('statsContainer');
-            
-            stats.innerHTML = data.h.map((h, i) => {
-                const isHigh = h >= 0;
-                const color = getTideColor(h);
-                const border = h >= 1.40 ? (h >= 1.60 ? 'border-red-500 shadow-[0_5px_15px_rgba(239,68,68,0.3)]' : 'border-amber-500') : 'border-transparent';
-                
-                return `
-                    <div class="glass p-7 rounded-[2.5rem] card-tide border-b-8 ${border}">
-                        <p class="text-[0.6rem] font-black uppercase tracking-[0.25em] text-slate-500 mb-4">${isHigh ? 'Đỉnh Triều' : 'Chân Triều'} ${Math.floor(i/2)+1}</p>
-                        <p class="text-5xl font-black ${color} tracking-tighter">${h.toFixed(2)}<span class="text-sm ml-1 font-bold text-slate-500 uppercase">m</span></p>
-                        <div class="mt-8 flex items-center gap-2 text-slate-500 font-bold text-xs uppercase bg-slate-800/20 px-4 py-2 rounded-full w-fit">
-                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                             ${data.t[i]}
-                        </div>
-                    </div>
-                `;
+            stats.innerHTML = dayData.h.map((h, i) => {
+                const color = h >= 1.40 ? (h >= 1.60 ? 'text-red-500' : 'text-amber-500') : (h >= 0 ? 'text-blue-500' : 'text-slate-400');
+                return `<div class="glass p-7 rounded-[2.5rem] card-tide border-b-8 ${h >= 1.40 ? 'border-red-500' : 'border-transparent'}">
+                    <p class="text-[0.6rem] font-black uppercase tracking-widest text-slate-500 mb-4">${h>=0?'Đỉnh':'Chân'} Triều ${Math.floor(i/2)+1}</p>
+                    <p class="text-5xl font-black ${color} tracking-tighter">${h.toFixed(2)}<span class="text-sm ml-1 font-bold text-slate-500">m</span></p>
+                    <p class="mt-6 text-slate-500 font-bold text-xs uppercase">${dayData.t[i]}</p>
+                </div>`;
             }).join('');
 
-            const maxH = Math.max(...data.h);
+            // 2. Alert logic
+            const maxH = Math.max(...dayData.h);
             const alertBox = document.getElementById('alertBox');
             if (maxH >= 1.40) {
                 alertBox.classList.remove('hidden');
-                let lv = maxH >= 1.60 ? 'BÁO ĐỘNG III' : (maxH >= 1.50 ? 'BÁO ĐỘNG II' : 'BÁO ĐỘNG I');
-                document.getElementById('alertMsg').innerText = `Mực nước đỉnh triều dự báo tại trạm ${station} đạt ${maxH.toFixed(2)}m (Vượt ${lv}). Nguy cơ ngập úng tại các tuyến đường trũng ven sông.`;
+                document.getElementById('alertMsg').innerText = `Mực nước đỉnh triều dự báo ngày ${selectedDate} đạt ${maxH.toFixed(2)}m.`;
             } else { alertBox.classList.add('hidden'); }
 
-            renderChart(data.h, data.t);
+            // 3. Prepare 3-Day Continuous Data for Chart
+            const allDates = Object.keys(rawData[station]).sort((a,b) => {
+                const partsA = a.split('/'), partsB = b.split('/');
+                return new Date(2026, partsA[1]-1, partsA[0]) - new Date(2026, partsB[1]-1, partsB[0]);
+            });
+            
+            const startIdx = allDates.indexOf(selectedDate);
+            let combinedPoints = [];
+            for (let i = 0; i < 3; i++) {
+                const d = allDates[startIdx + i];
+                if (d) {
+                    const dData = rawData[station][d];
+                    dData.h.forEach((h, j) => {
+                        combinedPoints.push({ h, label: `${d} ${dData.t[j]}`, sortKey: `${d.split('/').reverse().join('')}${dData.t[j]}` });
+                    });
+                }
+            }
+            combinedPoints.sort((a,b) => a.sortKey.localeCompare(b.sortKey));
+
+            renderChart(combinedPoints);
         }
 
-        function renderChart(heights, times) {
+        function renderChart(points) {
             const isLight = document.body.classList.contains('light-mode');
-            const combined = heights.map((h, i) => ({ h, t: times[i] })).sort((a,b) => a.t.localeCompare(b.t));
-            
             if (myChart) myChart.destroy();
             const ctx = document.getElementById('tideChart').getContext('2d');
             
             myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: combined.map(i => i.t),
+                    labels: points.map(p => p.label),
                     datasets: [{
-                        label: 'Mực nước (m)',
-                        data: combined.map(i => i.h),
-                        borderColor: isLight ? '#2563eb' : '#3b82f6',
+                        data: points.map(p => p.h),
                         borderWidth: 6,
-                        pointBackgroundColor: '#fff',
-                        pointBorderWidth: 4,
-                        pointRadius: 6,
+                        pointRadius: 4,
                         fill: true,
-                        backgroundColor: isLight ? 'rgba(37, 99, 235, 0.05)' : 'rgba(59, 130, 246, 0.15)',
-                        tension: 0.4
+                        tension: 0.4,
+                        // Dynamic Color Segments
+                        segment: {
+                            borderColor: ctx => {
+                                const val = ctx.p1.parsed.y;
+                                if (val >= 1.60) return '#ef4444';
+                                if (val >= 1.50) return '#f97316';
+                                if (val >= 1.40) return '#fbbf24';
+                                if (val < 0) return '#94a3b8';
+                                return '#3b82f6';
+                            }
+                        },
+                        backgroundColor: isLight ? 'rgba(59, 130, 246, 0.02)' : 'rgba(59, 130, 246, 0.1)'
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     scales: {
-                        y: { 
-                            min: -2.2, max: 2.2, 
-                            ticks: { color: isLight ? '#64748b' : '#94a3b8', font: { weight: '800' } },
-                            grid: { color: isLight ? '#e2e8f0' : 'rgba(255,255,255,0.05)' }
-                        },
-                        x: { 
-                            ticks: { color: isLight ? '#64748b' : '#94a3b8', font: { weight: '800' } },
-                            grid: { display: false }
-                        }
+                        y: { min: -2.2, max: 2.2, ticks: { color: isLight?'#64748b':'#94a3b8', font: {weight:'800'} }, grid: { color: isLight?'#e2e8f0':'rgba(255,255,255,0.05)' } },
+                        x: { ticks: { color: isLight?'#64748b':'#94a3b8', font: {weight:'800'}, maxRotation: 45, minRotation: 45 }, grid: { display: false } }
                     },
                     plugins: {
                         legend: { display: false },
                         annotation: {
                             annotations: {
-                                bd1: { type: 'line', yMin: 1.40, yMax: 1.40, borderColor: '#fbbf24', borderWidth: 2, borderDash: [6, 6], label: { display: true, content: 'BĐ I (1.4m)', position: 'start', backgroundColor: '#fbbf24', color: '#000', font: {size: 10, weight: 'bold'} } },
-                                bd2: { type: 'line', yMin: 1.50, yMax: 1.50, borderColor: '#f97316', borderWidth: 2, borderDash: [6, 6], label: { display: true, content: 'BĐ II (1.5m)', position: 'start', backgroundColor: '#f97316', color: '#fff', font: {size: 10, weight: 'bold'} } },
-                                bd3: { type: 'line', yMin: 1.60, yMax: 1.60, borderColor: '#ef4444', borderWidth: 3, borderDash: [6, 6], label: { display: true, content: 'BĐ III (1.6m)', position: 'start', backgroundColor: '#ef4444', color: '#fff', font: {size: 10, weight: 'bold'} } }
+                                bd1: { type: 'line', yMin: 1.4, yMax: 1.4, borderColor: '#fbbf24', borderWidth: 2, borderDash: [5, 5], label: { display: true, content: 'BĐ I', position: 'start', backgroundColor: '#fbbf24', color: '#000' } },
+                                bd3: { type: 'line', yMin: 1.6, yMax: 1.6, borderColor: '#ef4444', borderWidth: 2, borderDash: [5, 5], label: { display: true, content: 'BĐ III', position: 'start', backgroundColor: '#ef4444', color: '#fff' } }
                             }
                         }
                     }
@@ -319,7 +219,7 @@
             });
         }
 
-        stationEl.onchange = renderAll;
+        stationEl.onchange = updateUI;
         datePicker.onchange = updateUI;
         init();
     </script>
