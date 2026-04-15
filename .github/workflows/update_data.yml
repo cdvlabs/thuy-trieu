@@ -2,17 +2,21 @@ name: Update Tide Data Automatically
 
 on:
   schedule:
-    - cron: '30 2 * * *'  # Lần 1: 02:30 UTC = 09:30 AM VN
-    - cron: '30 9 * * *'  # Lần 2: 09:30 UTC = 16:30 PM VN
+    - cron: '30 2 * * *'  # 09:30 AM VN
+    - cron: '30 9 * * *'  # 16:30 PM VN
   push:
     paths:
       - 'HCMC_TVHN_*.pdf'
       - 'parse_pdf.py'
-  workflow_dispatch:      # Cho phép bấm nút chạy thủ công
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Thêm dòng này để ép sử dụng Node.js 24 và xóa bỏ cảnh báo
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
